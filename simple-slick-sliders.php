@@ -133,6 +133,8 @@ class Simple_Slick_Sliders_Main {
 		// Settings class
 		//require plugin_dir_path( __FILE__ ) . 'includes/global/settings.php';
 
+        require plugin_dir_path( __FILE__ ) . 'includes/global/shortcode.php';
+
         // Slideshow content types
         require plugin_dir_path( __FILE__ ) . 'includes/global/slider-type/standard.php';
 

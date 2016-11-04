@@ -171,7 +171,9 @@ class SSS_Metaboxes {
 			// Remove all unnecessary metaboxes, ones not added by this plugin
         	$this->remove_all_the_metaboxes();
 
-            add_meta_box( 'global_slider_metabox', __( 'Slider Settings', 'blox' ), array( $this, 'global_slider_metabox_callback' ), 'simple-slick-sliders', 'normal', 'low' );
+            add_meta_box( 'global_slider_metabox', __( 'Slider Settings', 'simple-slick-sliders' ), array( $this, 'global_slider_metabox_callback' ), 'simple-slick-sliders', 'normal', 'low' );
+            add_meta_box( 'slider_implementation_metabox', __( 'Slider Implementation', 'simple-slick-sliders' ), array( $this, 'slider_implementation_metabox_callback' ), 'simple-slick-sliders', 'side', 'low' );
+
 		}
     }
 
@@ -227,6 +229,26 @@ class SSS_Metaboxes {
                 }
             }
         }
+    }
+
+
+    /**
+     * Callback for displaying content in the registered metabox.
+     *
+     * @since 1.0.0
+     *
+     * @param object $post The current post object.
+     */
+    public function slider_implementation_metabox_callback( $post ) {
+        $slider_data = get_post_meta( $post->ID, '_sss_slider_data', true );
+
+        ?>
+            <div>
+                [simple-slick-sliders id="<?php echo $post->ID;?>"]
+            </div>
+
+        <?php
+
     }
 
 
