@@ -52,7 +52,7 @@ class SSS_Common {
 
         // Load the base class object.
         $this->base = Simple_Slick_Sliders_Main::get_instance();
-        
+
     }
 
 
@@ -125,7 +125,7 @@ class SSS_Common {
      */
     public function get_slider_types() {
 
-    	$slider_types = array();
+    	$slider_types = array('new'=> 'NEW');
 
     	return apply_filters( 'sss_slider_type', $slider_types );
     }
@@ -155,6 +155,7 @@ class SSS_Common {
 
         $clean = preg_replace( '/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/', '', $string );
         $clean = str_replace( array( "\r\n", "\r", "\t", "\n", '  ', '    ', '     ' ), '', $clean );
+        $clean = trim($clean);
         return apply_filters( 'sss_minified_string', $clean, $string );
     }
 

@@ -129,11 +129,13 @@ class Simple_Slick_Sliders_Main {
        	// Plugin utility classes
         require plugin_dir_path( __FILE__ ) . 'includes/global/posttype.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/global/common.php';
+        require plugin_dir_path( __FILE__ ) . 'includes/global/action-storage.php';
 
 		// Settings class
 		//require plugin_dir_path( __FILE__ ) . 'includes/global/settings.php';
 
         require plugin_dir_path( __FILE__ ) . 'includes/global/shortcode.php';
+        require plugin_dir_path( __FILE__ ) . 'includes/global/output.php';
 
         // Slideshow content types
         require plugin_dir_path( __FILE__ ) . 'includes/global/slider-type/standard.php';
@@ -148,7 +150,7 @@ class Simple_Slick_Sliders_Main {
             require plugin_dir_path( __FILE__ ) . 'includes/admin/metaboxes.php';
 
             require plugin_dir_path( __FILE__ ) . 'includes/admin/slider.php';
-            //require plugin_dir_path( __FILE__ ) . 'includes/admin/controls.php';
+            require plugin_dir_path( __FILE__ ) . 'includes/admin/controls.php';
 
         }
 
@@ -234,4 +236,4 @@ class Simple_Slick_Sliders_Main {
 }
 
 // Load the main plugin class.
-$blox_main = Simple_Slick_Sliders_Main::get_instance();
+$sss_main = Simple_Slick_Sliders_Main::get_instance();

@@ -53,10 +53,10 @@ class SSS_Slider_Standard {
         // Load the base class object.
         $this->base = Simple_Slick_Sliders_Main::get_instance();
 
-		add_filter( 'sss_slider_type', array( $this, 'add_slider_standard' ), 16 );
-		add_action( 'sss_get_slider_standard', array( $this, 'get_slider_standard' ), 10, 4 );
-		add_filter( 'sss_save_slider_standard', array( $this, 'save_slider_standard' ), 10, 3 );
-		add_action( 'sss_print_slider_standard', array( $this, 'print_slider_standard' ), 10, 4 );
+		add_filter( 'sss_slider_type', array( $this, 'add_slider' ), 16 );
+		add_action( 'sss_get_slider_standard', array( $this, 'get_slider' ), 10, 4 );
+		add_filter( 'sss_save_slider_standard', array( $this, 'save_slider' ), 10, 3 );
+		add_action( 'sss_print_slider_standard', array( $this, 'print_slider' ), 10, 4 );
 
 		// Add the slideshow modal to the admin page
         add_action( 'sss_metabox_modals', array( $this, 'add_slider_modal' ), 10, 1 );
@@ -89,7 +89,7 @@ class SSS_Slider_Standard {
      *
      * @param array $content_types  An array of the content types available
      */
-	public function add_slider_standard( $slider_types ) {
+	public function add_slider( $slider_types ) {
 		$slider_types['standard'] = __( 'Standard', 'simple-slick-sliders' );
 		return $slider_types;
 	}
@@ -105,56 +105,20 @@ class SSS_Slider_Standard {
      * @param string $get_prefix  The prefix for retrieving each setting
      * @param bool $global        The block state
      */
-	public function get_slider_standard( $id, $name_prefix, $get_prefix, $global ) {
+	public function get_slider( $id, $name_prefix, $get_prefix, $global ) {
 		?>
 
 		<!-- Slideshow Settings -->
 		<table class="form-table sss-content-slideshow">
 			<tbody>
-				<tr class="sss-content-title"><th scope="row"><?php _e( 'Standard Slider', 'simple-slick-sliders' ); ?></th><td><hr></td></tr>
-
 				<tr class="sss-slideshow-option sss-content-slideshow-builtin">
-					<th scope="row"><?php _e( 'Add Slides' ); ?></th>
+					<th scope="row"><?php _e( 'Add Slides', 'simple-slick-sliders' ); ?></th>
 					<td>
+                        <select>
+                            <option value="image"><?php _e( 'Add Slides', 'simple-slick-sliders' ); ?></option>
 						<input type="submit" class="button button-primary" name="sss_slideshow_upload_button" id="sss_slideshow_upload_button" value="<?php _e( 'Select Image(s)'); ?>" onclick="sss_builtinSlideshowUpload.uploader('<?php echo $name_prefix; ?>'); return false;" /> &nbsp;
 
-						<ul class="sss-slider-container">
 
-						<?php if ( ! empty( $get_prefix['standard']['slides'] ) ) { ?>
-
-							<?php foreach ( $get_prefix['standard']['slides'] as $key => $slides ) { ?>
-								<li id="<?php echo $key; ?>" class="sss-slideshow-item" >
-									<div class="sss-slide-container">
-										<img src="<?php echo isset( $slides['image']['id'] ) ? wp_get_attachment_thumb_url( esc_attr( $slides['image']['id'] ) ) : ''; ?>" alt="<?php echo esc_attr( $slides['image']['alt'] ); ?>" />
-									</div>
-									<input type="text" class="slide-type sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][slide_type]" value="image" /> <!-- possibly more slide types in the future -->
-
-									<input type="text" class="slide-image-id sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][id]" value="<?php echo isset( $slides['image']['id'] ) ? esc_attr( $slides['image']['id'] ) : ''; ?>" />
-									<input type="text" class="slide-image-url sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][url]" value="<?php echo esc_attr( $slides['image']['url'] ); ?>" />
-									<input type="text" class="slide-image-title sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][title]" value="<?php echo isset( $slides['image']['title'] ) ? esc_attr( $slides['image']['title'] ) : ''; ?>" />
-									<input type="text" class="slide-image-alt sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][alt]" value="<?php echo isset( $slides['image']['alt'] ) ? esc_attr( $slides['image']['alt'] ) : ''; ?>" />
-									<input type="checkbox" class="slide-image-link-enable sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][enable]" value="1" <?php ! empty( $slides['image']['link']['enable'] ) ? checked( $slides['image']['link']['enable'] ) : ''; ?> />
-									<input type="text" class="slide-image-link-url sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][url]" value="<?php echo ! empty( $slides['image']['link']['url'] ) ? esc_attr( $slides['image']['link']['url'] ) : 'http://'; ?>" />
-									<input type="text" class="slide-image-link-title sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][title]" value="<?php echo ! empty( $slides['image']['link']['title'] ) ? esc_attr( $slides['image']['link']['title'] ) : ''; ?>" />
-									<input type="checkbox" class="slide-image-link-target sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][target]" value="1" <?php ! empty( $slides['image']['link']['target'] ) ? checked( $slides['image']['link']['target'] ) : ''; ?> />
-									<input type="text" class="slide-image-caption sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][caption]" value="<?php echo isset( $slides['image']['caption'] ) ? esc_attr( $slides['image']['caption'] ) : ''; ?>" />
-									<input type="text" class="slide-image-classes sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][classes]" value="<?php echo ! empty( $slides['image']['classes'] ) ? esc_attr( $slides['image']['classes'] ) : ''; ?>" />
-
-									<div class="sss-slide-details-container">
-										<a class="sss-slide-details" href="#sss_slide_details"><?php _e( 'Details', 'simple-slick-sliders' );?></a><a class="sss-slide-remove" href="#"><?php _e( 'Remove', 'simple-slick-sliders' );?></a>
-									</div>
-								</li>
-							<?php } ?>
-
-							<?php } else { ?>
-									<li class="sss-filler" >
-										<div class="sss-filler-container"></div>
-										<div class="sss-filler-text">
-											<span><?php _e( 'Details', 'simple-slick-sliders' );?></span><span class="right"><?php _e( 'Remove', 'simple-slick-sliders' );?></span>
-										</div>
-									</li>
-							<?php } ?>
-						</ul>
 
 					</td>
 				</tr>
@@ -169,6 +133,45 @@ class SSS_Slider_Standard {
 
 			</tbody>
 		</table>
+        <div class="sss-slide-container-outer">
+            <ul class="sss-slider-container" style="overflow:hidden;">
+
+            <?php if ( ! empty( $get_prefix['standard']['slides'] ) ) { ?>
+
+                <?php foreach ( $get_prefix['standard']['slides'] as $key => $slides ) { ?>
+                    <li id="<?php echo $key; ?>" class="sss-slideshow-item" >
+                        <div class="sss-slide-container">
+                            <img src="<?php echo isset( $slides['image']['id'] ) ? wp_get_attachment_thumb_url( esc_attr( $slides['image']['id'] ) ) : ''; ?>" alt="<?php echo esc_attr( $slides['image']['alt'] ); ?>" />
+                        </div>
+                        <input type="text" class="slide-type sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][slide_type]" value="image" /> <!-- possibly more slide types in the future -->
+
+                        <input type="text" class="slide-image-id sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][id]" value="<?php echo isset( $slides['image']['id'] ) ? esc_attr( $slides['image']['id'] ) : ''; ?>" />
+                        <input type="text" class="slide-image-url sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][url]" value="<?php echo esc_attr( $slides['image']['url'] ); ?>" />
+                        <input type="text" class="slide-image-title sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][title]" value="<?php echo isset( $slides['image']['title'] ) ? esc_attr( $slides['image']['title'] ) : ''; ?>" />
+                        <input type="text" class="slide-image-alt sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][alt]" value="<?php echo isset( $slides['image']['alt'] ) ? esc_attr( $slides['image']['alt'] ) : ''; ?>" />
+                        <input type="checkbox" class="slide-image-link-enable sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][enable]" value="1" <?php ! empty( $slides['image']['link']['enable'] ) ? checked( $slides['image']['link']['enable'] ) : ''; ?> />
+                        <input type="text" class="slide-image-link-url sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][url]" value="<?php echo ! empty( $slides['image']['link']['url'] ) ? esc_attr( $slides['image']['link']['url'] ) : 'http://'; ?>" />
+                        <input type="text" class="slide-image-link-title sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][title]" value="<?php echo ! empty( $slides['image']['link']['title'] ) ? esc_attr( $slides['image']['link']['title'] ) : ''; ?>" />
+                        <input type="checkbox" class="slide-image-link-target sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][link][target]" value="1" <?php ! empty( $slides['image']['link']['target'] ) ? checked( $slides['image']['link']['target'] ) : ''; ?> />
+                        <input type="text" class="slide-image-caption sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][caption]" value="<?php echo isset( $slides['image']['caption'] ) ? esc_attr( $slides['image']['caption'] ) : ''; ?>" />
+                        <input type="text" class="slide-image-classes sss-force-hidden" name="<?php echo $name_prefix; ?>[standard][slides][<?php echo $key; ?>][image][classes]" value="<?php echo ! empty( $slides['image']['classes'] ) ? esc_attr( $slides['image']['classes'] ) : ''; ?>" />
+
+                        <div class="sss-slide-details-container">
+                            <a class="sss-slide-details" href="#sss_slide_details"><?php _e( 'Details', 'simple-slick-sliders' );?></a><a class="sss-slide-remove" href="#"><?php _e( 'Remove', 'simple-slick-sliders' );?></a>
+                        </div>
+                    </li>
+                <?php } ?>
+
+                <?php } else { ?>
+                        <li class="sss-filler" >
+                            <div class="sss-filler-container"></div>
+                            <div class="sss-filler-text">
+                                <span><?php _e( 'Details', 'simple-slick-sliders' );?></span><span class="right"><?php _e( 'Remove', 'simple-slick-sliders' );?></span>
+                            </div>
+                        </li>
+                <?php } ?>
+            </ul>
+        </div>
 		<?php
 	}
 
@@ -184,7 +187,7 @@ class SSS_Slider_Standard {
      *
      * @return array $settings    Return an array of updated slideshow settings
      */
-	public function save_slider_standard( $name_prefix, $id, $global ) {
+	public function save_slider( $name_prefix, $id, $global ) {
 
 		$settings = array();
 
@@ -195,16 +198,16 @@ class SSS_Slider_Standard {
 				// Only slide type currently (v1.0.0) is "image"
 				$settings['slides'][$key]['slide_type'] 			 = 'image';
 
-				$settings['slides'][$key]['image']['id'] 			= trim( strip_tags( $name_prefix['slides'][$key]['image']['id'] ) );
-				$settings['slides'][$key]['image']['url']    		= esc_url( $name_prefix['slides'][$key]['image']['url'] );
-				$settings['slides'][$key]['image']['title']    		= trim( strip_tags( $name_prefix['slides'][$key]['image']['title'] ) );
-				$settings['slides'][$key]['image']['alt'] 	   		= trim( strip_tags( $name_prefix['slides'][$key]['image']['alt'] ) );
-				$settings['slides'][$key]['image']['caption']  		= wp_kses_post( $name_prefix['slides'][$key]['image']['caption'] );
-				$settings['slides'][$key]['image']['link']['enable']	= isset( $name_prefix['slides'][$key]['image']['link']['enable'] ) ? 1 : 0;
-				$settings['slides'][$key]['image']['link']['url']	= isset( $name_prefix['slides'][$key]['image']['link']['url'] ) ? ( $name_prefix['slides'][$key]['image']['link']['url'] == 'http://' ? '' : esc_url( $name_prefix['slides'][$key]['image']['link']['url'] ) ) : '';
-				$settings['slides'][$key]['image']['link']['title']	= isset( $name_prefix['slides'][$key]['image']['link']['title'] ) ? trim( strip_tags( $name_prefix['slides'][$key]['image']['link']['title'] ) ) : '';
-				$settings['slides'][$key]['image']['link']['target']	= isset( $name_prefix['slides'][$key]['image']['link']['target'] ) ? 1 : 0;
-				$settings['slides'][$key]['image']['classes'] 	 	= trim( strip_tags( $name_prefix['slides'][$key]['image']['classes'] ) );
+				$settings['slides'][$key]['image']['id'] 			 = trim( strip_tags( $name_prefix['slides'][$key]['image']['id'] ) );
+				$settings['slides'][$key]['image']['url']    		 = esc_url( $name_prefix['slides'][$key]['image']['url'] );
+				$settings['slides'][$key]['image']['title']    		 = trim( strip_tags( $name_prefix['slides'][$key]['image']['title'] ) );
+				$settings['slides'][$key]['image']['alt'] 	   		 = trim( strip_tags( $name_prefix['slides'][$key]['image']['alt'] ) );
+				$settings['slides'][$key]['image']['caption']  		 = wp_kses_post( $name_prefix['slides'][$key]['image']['caption'] );
+				$settings['slides'][$key]['image']['link']['enable'] = isset( $name_prefix['slides'][$key]['image']['link']['enable'] ) ? 1 : 0;
+				$settings['slides'][$key]['image']['link']['url']	 = isset( $name_prefix['slides'][$key]['image']['link']['url'] ) ? ( $name_prefix['slides'][$key]['image']['link']['url'] == 'http://' ? '' : esc_url( $name_prefix['slides'][$key]['image']['link']['url'] ) ) : '';
+				$settings['slides'][$key]['image']['link']['title']	 = isset( $name_prefix['slides'][$key]['image']['link']['title'] ) ? trim( strip_tags( $name_prefix['slides'][$key]['image']['link']['title'] ) ) : '';
+				$settings['slides'][$key]['image']['link']['target'] = isset( $name_prefix['slides'][$key]['image']['link']['target'] ) ? 1 : 0;
+				$settings['slides'][$key]['image']['classes'] 	 	 = trim( strip_tags( $name_prefix['slides'][$key]['image']['classes'] ) );
 			}
 		} else {
 			$settings['slides'] = '';
@@ -311,29 +314,63 @@ class SSS_Slider_Standard {
 
 
 	/**
-	 * Prints all of the slideshow content to the frontend
+	 * Prints all of the slider content
      *
      * @since 1.0.0
      *
-     * @param int $id             The block id
-     * @param string $name_prefix The prefix for saving each setting
-     * @param string $get_prefix  The prefix for retrieving each setting
-     * @param string $global      The block state
+     * @param int $slider_id      The slider id
+     * @param string $slider_data Array of all slider data
+     * @param string $type        How are we printing the slider, shortcode, function etc.
      */
-	public function print_slider_standard( $content_data, $block_id, $block, $global ) {
-
-		// Allows us to use is_plugin_active on the frontend
-		include_once ( ABSPATH . 'wp-admin/includes/plugin.php' );
-
-		// Get the type of block we are working with
-		$block_scope = $global ? 'global' : 'local';
+	public function print_slider( $slider_id, $slider_data, $type ) {
 
 		// Array of additional CSS classes
 		$classes = array();
 
+        $background = true;
+        $background_class = 'background';
+
+        foreach ( $slider_data['slider']['standard']['slides'] as $key => $data ) {
+
+            if ( $background ) {
+                $background_image = 'background-image: url(' . $data['image']['url'] . ');';
+            }
+            ?>
+            <div id="<?php echo $key; ?>" class="sss-slide <?php echo $data['slide_type'] . ' ' . $background_class; ?>" style="<?php echo $background_image;?>">
+                <?php
+                // Get our image link if enabled
+                if ( ! empty( $data['image']['link']['url'] ) && $data['image']['link']['enable'] ) {
+                    $target = $data['image']['link']['target'] == 1 ? '_blank' : '_self';
+                    $link_start = '<a href="' . $data['image']['link']['url'] . '" target="' . $target . '" title="' . $data['image']['link']['title'] . '">';
+                    $link_end   = '</a>';
+                } else {
+                    $link_start = '';
+                    $link_end   = '';
+                }
+
+                echo $link_start;
+                if ( ! $background ) {
+                ?>
+                <img src="<?php echo ! empty( $data['image']['url'] ) ? esc_attr( $data['image']['url'] ) : ''; ?>" alt="<?php echo ! empty( $data['image']['alt'] ) ? esc_attr( $data['image']['alt'] ) : ''; ?>" title="<?php echo ! empty( $data['image']['title'] ) ? esc_attr( $data['image']['title'] ) : ''; ?>" />
+                <?php
+                }
+                echo $link_end; ?>
+
+                <?php if ( ! empty( $data['image']['caption'] ) ) {  ?>
+
+                    <div class="sss-caption-container">
+                        <div class="sss-caption-wrap">
+                            <?php echo wp_kses_post( $data['image']['caption'] ); ?>
+                        </div>
+                    </div>
+                <?php }  ?>
+
+            </div>
+            <?php
+        }
 
 
-		// Check to make sure slides have been added to the builtin slideshow
+		/* Check to make sure slides have been added to the builtin slideshow
 		if ( ! empty( $content_data['slideshow'] ) ) { ?>
 			<div class="sss-slideshow-container builtin flexslider <?php echo implode( ' ', apply_filters( 'sss_content_slideshow_classes', $classes ) ); ?>">
 				<ul class="sss-slideshow-wrap slides">
@@ -399,7 +436,7 @@ class SSS_Slider_Standard {
 			</div>
 		<?php }
 
-
+        */
 	}
 
 

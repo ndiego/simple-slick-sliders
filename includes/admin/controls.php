@@ -54,9 +54,11 @@ class SSS_Controls {
         $this->base = Simple_Slick_Sliders_Main::get_instance();
 
 		// Setup style settings
-		add_filter( 'sss_metabox_tabs', array( $this, 'add_style_tab' ), 30 );
-		add_action( 'sss_get_metabox_tab_controls', array( $this, 'get_metabox_tab_controls' ), 10, 4 );
-		add_filter( 'sss_save_metabox_tab_controls', array( $this, 'save_metabox_tab_controls' ), 10, 3 );
+		add_filter( 'sss_metabox_tabs', array( $this, 'add_tab' ), 30 );
+		//add_action( 'sss_get_metabox_tab_controls', array( $this, 'get_metabox_tab_controls' ), 10, 4 );
+		//add_filter( 'sss_save_metabox_tab_controls', array( $this, 'save_metabox_tab_controls' ), 10, 3 );
+
+        add_action( 'sss_print_slider_controls', array( $this, 'print_slider_controls' ), 10, 3 );
     }
 
 
@@ -68,7 +70,7 @@ class SSS_Controls {
      * @param array $tab  An array of the tabs available
      * @return array $tab The updated tabs array
      */
-	public function add_style_tab( $tabs ) {
+	public function add_tab( $tabs ) {
 
 		$tabs['controls'] = array(
 			'title' => __( 'Controls', 'simple-slick-sliders' ),
@@ -239,6 +241,20 @@ class SSS_Controls {
 		return apply_filters( 'sss_save_style_settings', $settings, $post_id, $name_prefix, $global );
 	}
 
+
+   /* Print all of slick controls (js)
+    *
+    * @since 1.0.0
+    *
+    * @param string $slider_id  The id of the givien slider
+    * @param array $slider_data Array of all slider data
+    * @param string $output_type Determines how the slider is being output, shortcode, function etc.
+    */
+   public function print_slider_controls( $slider_id, $slider_data, $output_type ) {
+       ?>
+           jQuery(".sss-container").slick();
+       <?php
+   }
 
     /**
      * Returns the singleton instance of the class.
